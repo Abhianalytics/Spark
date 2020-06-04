@@ -1,0 +1,28 @@
+# We would be writing a sample code to break down a text file into individual words and apply a word count on it.
+
+# Here we are copying the contents of the README.md file into textFile variable
+val textFile = sc.textFile("file:///C:/Users/agaur26/Desktop/README.md")
+
+# below code displays the first line of text from the variable
+textFile.first
+
+# splitting the data into individual words separated by "spaces"
+val tokenizedFileData = textFile.flatMap(line => line.split(" "))
+
+# Use the map function to assign count of 1 to each word 
+val countPrep = tokenizedFileData.map(word => (word,1))
+
+# Use the reduce function to add counts for repeated words
+val counts = countPrep.reduceByKey((accumValue, newValue) => accumValue + newValue)
+
+# sort the counts on descending order of the counts
+# here _2 refers to the second column in the key value pair refering to count. if we used _1 it would done the sorting on word
+# false refers to sorting in descending order. true would lead to ascending order 
+
+val sortedCounts = counts.sortBy(kvpair => kvpair._2, false)
+
+
+
+# store the output into a textfile on the computer
+sortedCounts.saveAsTextFile(""file:///C:/Users/agaur26/Desktop/ReadMeWordCount")
+
